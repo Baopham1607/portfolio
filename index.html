@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portfolio • Pham Gia Bao</title>
+  <title>Portfolio • Phạm Gia Bảo</title>
   <meta name="description" content="Portfolio cá nhân: giới thiệu, kỹ năng, dự án, blog và liên hệ." />
   <meta property="og:title" content="Portfolio • Your Name">
   <meta property="og:description" content="Portfolio cá nhân: giới thiệu, kỹ năng, dự án, blog và liên hệ.">
@@ -118,6 +118,26 @@
 
     /* ===== Footer ===== */
     footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); }
+    /* ===== Gallery ===== */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+.gallery img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+  aspect-ratio: 4/3;
+  border: 1px solid var(--line);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.gallery img:hover {
+  transform: scale(1.03);
+  box-shadow: var(--shadow);
+}
+
   </style>
 </head>
 <body>
@@ -142,16 +162,19 @@
   <section id="home" class="container hero">
     <div>
       <p class="chip"><!-- TODO: role/position --> Network Engineer</p>
-      <h1 style="font-size: clamp(32px, 6vw, 48px); margin-top: 10px;">Xin chào, mình là <span style="color:var(--brand)">Pham Gia Bao</span> 👋</h1>
+      <h1 style="font-size: clamp(32px, 6vw, 48px); margin-top: 10px;">Xin chào, mình là <span style="color:var(--brand)">Phạm Gia Bảo</span> 👋</h1>
       <p class="muted" style="margin-top: 10px; max-width: 65ch;">
-        <!-- TODO: intro --> Đam mê An toàn Thông tin, xử lý sự cố, xây dựng hệ thống mạng.
+        <!-- TODO: intro --> Đam mê quản trị mạng, xử lý sự cố, xây dựng hệ thống mạng.
+      </p>
+      <p class="muted" style="margin-top: 10px; max-width: 65ch;">
+        <!-- TODO: intro -->
         Mục tiêu: Trở thành 1 kỹ sư quản trị mạng.
       </p>
       <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;">
-        <a class="btn" href="#portfolio">Xem dự án</a>
-        <a class="btn-ghost" href="#resume">Tải CV</a>
-        <a class="btn-ghost" href="https://github.com/yourname" target="_blank" rel="noreferrer">GitHub</a>
-        <a class="btn-ghost" href="https://www.linkedin.com/in/yourname" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a class="btn" href="#portfolio">Xem Bài Tập</a>
+        <a class="btn-ghost" href="#resume">Xem kinh nghiệm</a>
+        <a class="btn-ghost" href="https://github.com/Baopham1607" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="btn-ghost" href="https://www.facebook.com/bao.phamgia.31542/" target="_blank" rel="noreferrer">Facebook</a>
       </div>
     </div>
     <div class="card">
@@ -192,6 +215,12 @@
           <strong>Documentation & Training</strong>
           <p class="muted">Đọc và luyện tập</p>
         </div>
+      <h3 style="margin: 30px 0 14px;">Photo Gallery</h3>
+        <div class="gallery">
+        <img src="assets/img/friends.jpg" alt="Chụp cùng bạn bè">
+        <img src="assets/img/sport.jpg" alt="Thể thao">
+        <img src="assets/img/me.jpg" alt="Tôi">
+</div>
       </div>
     </div>
   </section>
