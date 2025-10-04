@@ -44,7 +44,23 @@
                   var(--bg);
       color: var(--text);
       line-height: 1.65;
+      position: relative;
+      overflow-x: hidden;
     }
+    /* === Animated gradient overlay (không thay nền cũ) === */
+    body::before{
+      content:"";
+      position:fixed; inset:-20% -20% -20% -20%;
+      background:
+        radial-gradient(800px 800px at var(--x,20%) var(--y,30%), rgba(65,209,183,0.10), transparent 60%),
+        conic-gradient(from var(--a,0deg), rgba(125,226,209,0.06), transparent 35%, rgba(65,209,183,0.08), transparent 70%);
+      filter: blur(30px);
+      pointer-events:none;
+      z-index:-1;
+      animation: swirl 18s linear infinite;
+    }
+    @keyframes swirl{ to{ --a:360deg; } }
+
     img { max-width: 100%; display: block; }
     a { color: inherit; text-decoration: none; }
     .container { width: min(100%, var(--container)); margin-inline: auto; padding: 0 20px; }
@@ -53,18 +69,22 @@
     h2 { font-size: clamp(28px, 4vw, 34px); margin-bottom: 18px; }
     .muted { color: var(--muted); }
     .chip { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:#0e1728; border:1px solid var(--line); font-size:12px; }
-    .btn { display:inline-flex; align-items:center; gap:10px; padding:10px 16px; border-radius:12px; background:var(--brand); color:#041014; font-weight:600; border:0; box-shadow: var(--shadow); cursor:pointer; }
+    .btn { position: relative; overflow: hidden; display:inline-flex; align-items:center; gap:10px; padding:10px 16px; border-radius:12px; background:var(--brand); color:#041014; font-weight:600; border:0; box-shadow: var(--shadow); cursor:pointer; transition: transform .2s ease, box-shadow .2s ease; }
     .btn-ghost { display:inline-flex; align-items:center; gap:10px; padding:10px 16px; border-radius:12px; background:transparent; color:var(--text); border:1px solid var(--line); }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,.35); }
     .grid { display:grid; gap:20px; }
 
     /* ===== Header ===== */
     header {
       position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px);
       background: rgba(11,18,32,0.55); border-bottom: 1px solid var(--line);
+      transition: background .25s ease, padding .25s ease, box-shadow .25s ease, border-color .25s ease;
     }
+    header.shrink { background: rgba(11,18,32,0.9); box-shadow: 0 8px 30px rgba(0,0,0,0.35); border-color: transparent; }
+
     .nav { display:flex; align-items:center; gap:10px; }
-    .nav a { padding:10px 12px; border-radius:10px; color: var(--muted); }
-    .nav a.active, .nav a:hover { background: #0e1728; color: var(--text); }
+    .nav a { padding:10px 12px; border-radius:10px; color: var(--muted); transition: transform .2s ease, background .2s ease; }
+    .nav a.active, .nav a:hover { background: #0e1728; color: var(--text); transform: translateY(-1px); }
     .brand { font-weight: 800; letter-spacing: .2px; }
     .spacer { flex: 1; }
     .mobile-toggle { display:none; }
@@ -72,15 +92,17 @@
 
     /* ===== Hero ===== */
     .hero { display:grid; grid-template-columns: 1.1fr .9fr; gap:32px; align-items:center; }
-    .card { background: var(--panel); border:1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
-    .avatar { border-radius: 18px; aspect-ratio: 4/3; object-fit: cover; }
+    .card { background: var(--panel); border:1px solid var(--line); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); will-change: transform; }
+    .avatar { border-radius: 18px; aspect-ratio: 4/3; object-fit: cover; transform: translateZ(0); transition: transform .8s cubic-bezier(.2,.65,.25,1); }
+    .card:hover .avatar{ transform: translateY(-4px) scale(1.01); }
     .info-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
     .info { background:#0f182a; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
     .info small { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
     @media (max-width: 920px) { .hero { grid-template-columns: 1fr; } }
 
     /* ===== What I'm doing / Services ===== */
-    .service { padding:18px; border-radius:16px; background:#0f182a; border:1px solid var(--line); }
+    .service { padding:18px; border-radius:16px; background:#0f182a; border:1px solid var(--line); will-change: transform; transition: box-shadow .2s ease, transform .2s ease; }
+    .service:hover { box-shadow: 0 16px 40px rgba(0,0,0,.35); }
 
     /* ===== Resume Section ===== */
 .resume-grid {
@@ -159,7 +181,8 @@
     .filters button { padding:8px 12px; border-radius:999px; background:#0e1728; border:1px solid var(--line); color:var(--muted); cursor:pointer; }
     .filters button.active { background:var(--brand); color:#041014; border-color:transparent; }
     .p-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
-    .p-card { border:1px solid var(--line); border-radius:16px; overflow:hidden; background:#0f182a; display:flex; flex-direction:column; }
+    .p-card { border:1px solid var(--line); border-radius:16px; overflow:hidden; background:#0f182a; display:flex; flex-direction:column; transition: transform .25s ease, box-shadow .25s ease; will-change: transform; }
+    .p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
     .p-card img { aspect-ratio: 16/10; object-fit: cover; }
     .p-card .body { padding: 14px 14px 18px; }
     @media (max-width: 980px) { .p-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -167,7 +190,8 @@
 
     /* ===== Blog ===== */
     .b-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
-    .b-card { border:1px solid var(--line); border-radius:16px; background:#0f182a; overflow:hidden; }
+    .b-card { border:1px solid var(--line); border-radius:16px; background:#0f182a; overflow:hidden; transition: transform .25s ease, box-shadow .25s ease; will-change: transform; }
+    .b-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
     .b-card .body { padding: 14px 18px 20px; }
     @media (max-width: 980px) { .b-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 640px) { .b-grid { grid-template-columns: 1fr; } }
@@ -263,6 +287,45 @@
   box-shadow: var(--shadow);
 }
 
+/* ====== Gallery caption overlay (dùng data-title sẵn có) ====== */
+.gallery a{
+  position: relative; overflow: hidden; border-radius: 12px;
+}
+.gallery a::after{
+  content: attr(data-title);
+  position:absolute; inset:auto 0 0 0;
+  padding:10px 12px; font-size:14px; color:#041014; font-weight:600;
+  background: linear-gradient(180deg, transparent, rgba(125,226,209,0.85));
+  transform: translateY(100%); transition: transform .25s ease;
+}
+.gallery a:hover::after{ transform: translateY(0); }
+
+/* ====== Reveal on scroll ====== */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.show { opacity: 1; transform: none; }
+
+/* ====== Tilt “shine” highlight ====== */
+.tilt-shine{
+  position:absolute; inset:0; pointer-events:none; opacity:.0;
+  background: radial-gradient(600px 200px at var(--mx) var(--my), rgba(255,255,255,.15), transparent 40%);
+  transition: opacity .2s ease;
+}
+.tilt-on:hover .tilt-shine{ opacity:.8; }
+
+/* ====== Button ripple ====== */
+.btn .ripple{
+  position:absolute; border-radius:50%; transform: scale(0);
+  background: rgba(255,255,255,.6); pointer-events:none;
+  animation: ripple .6s ease-out forwards;
+  mix-blend-mode: overlay;
+}
+@keyframes ripple{
+  to{ transform: scale(6); opacity:0; }
+}
+
+/* ====== Small helpers ====== */
+.hover-glow{ box-shadow: 0 0 0 rgba(125,226,209,0); transition: box-shadow .25s ease; }
+.hover-glow:hover{ box-shadow: 0 10px 40px rgba(125,226,209,0.25); }
 
   </style>
 </head>
@@ -285,7 +348,7 @@
   </header>
 
   <!-- ===== Hero ===== -->
-  <section id="home" class="container hero">
+  <section id="home" class="container hero reveal">
     <div>
       <p class="chip"><!-- TODO: role/position --> Network Engineer</p>
       <h1 style="font-size: clamp(32px, 6vw, 48px); margin-top: 10px;">Xin chào, mình là <span style="color:var(--brand)">Phạm Gia Bảo</span> 👋</h1>
@@ -300,13 +363,14 @@
         Mục tiêu: Trở thành 1 kỹ sư quản trị mạng.
       </p>
       <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:16px;">
-  <a class="btn" href="#portfolio">Xem Bài Tập</a>
-  <a class="btn" href="#resume">Xem kinh nghiệm</a>
-  <a class="btn" href="https://github.com/Baopham1607" target="_blank" rel="noreferrer">GitHub</a>
-  <a class="btn" href="https://www.facebook.com/bao.phamgia.31542/" target="_blank" rel="noreferrer">Facebook</a>
+  <a class="btn hover-glow" href="#portfolio">Xem Bài Tập</a>
+  <a class="btn hover-glow" href="#resume">Xem kinh nghiệm</a>
+  <a class="btn hover-glow" href="https://github.com/Baopham1607" target="_blank" rel="noreferrer">GitHub</a>
+  <a class="btn hover-glow" href="https://www.facebook.com/bao.phamgia.31542/" target="_blank" rel="noreferrer">Facebook</a>
 </div>
     </div>
-    <div class="card">
+    <div class="card tilt-on" style="position:relative">
+      <span class="tilt-shine" aria-hidden="true"></span>
       <img class="avatar" src="assets/img/anhdaidien.JPG" alt="Ảnh đại diện" />
       <div class="info-grid">
         <div class="info"><small>Email</small><div>giabao2005gv@gmail.com</div></div>
@@ -318,7 +382,7 @@
   </section>
 
   <!-- ===== About ===== -->
-  <section id="about">
+  <section id="about" class="reveal">
     <div class="container">
       <h2>About</h2>
       <p class="muted">
@@ -329,19 +393,23 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
 
       <h3 style="margin: 22px 0 10px;">What I'm doing</h3>
 <div class="grid" style="grid-template-columns: repeat(4, minmax(0,1fr));">
-  <div class="service">
+  <div class="service reveal tilt-on" style="position:relative">
+    <span class="tilt-shine"></span>
     <strong>Network Administration</strong>
     <p class="muted">Cấu hình, giám sát, tối ưu hệ thống mạng LAN/WAN.</p>
   </div>
-  <div class="service">
+  <div class="service reveal tilt-on" style="position:relative">
+    <span class="tilt-shine"></span>
     <strong>Server & Services</strong>
     <p class="muted">Quản trị máy chủ, dịch vụ DNS, DHCP, Mail, Web.</p>
   </div>
-  <div class="service">
+  <div class="service reveal tilt-on" style="position:relative">
+    <span class="tilt-shine"></span>
     <strong>Network Security</strong>
     <p class="muted">Triển khai firewall, VPN, đảm bảo an toàn hệ thống.</p>
   </div>
-  <div class="service">
+  <div class="service reveal tilt-on" style="position:relative">
+    <span class="tilt-shine"></span>
     <strong>Documentation & Training</strong>
     <p class="muted">Đọc và luyện tập</p>
   </div>
@@ -349,7 +417,7 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
 
 <!-- Tách Gallery thành block riêng -->
 <h3 style="margin: 30px 0 14px;">Photo Gallery</h3>
-<div class="gallery">
+<div class="gallery reveal">
   <a href="assets/img/friends.jpg" data-lightbox="mygallery" data-title="Chụp cùng bạn bè">
     <img src="assets/img/friends.jpg" alt="Chụp cùng bạn bè">
   </a>
@@ -390,7 +458,7 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
   </section>
 
   <!-- ===== Resume ===== -->
-<section id="resume">
+<section id="resume" class="reveal">
   <div class="container resume-grid">
     
     <!-- Education -->
@@ -413,19 +481,19 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
     <div>
       <h3 style="margin-top: 36px;">Skills</h3>
       <div class="skills-container">
-        <div class="skill">
+        <div class="skill reveal">
           <div class="skill-header"><span>Network Administration</span><span class="muted">55%</span></div>
           <div class="bar"><i style="width:55%"></i></div>
         </div>
-        <div class="skill">
+        <div class="skill reveal">
           <div class="skill-header"><span>Server Management</span><span class="muted">50%</span></div>
           <div class="bar"><i style="width:50%"></i></div>
         </div>
-        <div class="skill">
+        <div class="skill reveal">
           <div class="skill-header"><span>Network Security</span><span class="muted">40%</span></div>
           <div class="bar"><i style="width:40%"></i></div>
         </div>
-        <div class="skill">
+        <div class="skill reveal">
           <div class="skill-header"><span>Linux & Scripting</span><span class="muted">40%</span></div>
           <div class="bar"><i style="width:40%"></i></div>
         </div>
@@ -437,7 +505,7 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
 
 
   <!-- ===== Homework ===== -->
-  <section id="portfolio">
+  <section id="portfolio" class="reveal">
     <div class="container">
       <h2>Homework</h2>
       <div class="filters" id="filters"></div>
@@ -446,13 +514,14 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
   </section>
 
   <!-- ===== Blog ===== -->
-  <section id="blog">
+  <section id="blog" class="reveal">
   <div class="container">
     <h2>Blog</h2>
     <div class="grid b-grid" id="blogGrid">
 
       <!-- Thẻ video -->
-      <div class="b-card">
+      <div class="b-card reveal tilt-on" style="position:relative">
+        <span class="tilt-shine"></span>
         <div class="body">
           <iframe width="100%" height="315" 
                   src="https://www.youtube.com/embed/Vh3P5PVr95E?si=knpJsIJxYkGN_lLk" 
@@ -462,7 +531,8 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
         </div>
       </div>
       <!-- Thẻ video -->
-      <div class="b-card">
+      <div class="b-card reveal tilt-on" style="position:relative">
+        <span class="tilt-shine"></span>
         <div class="body">
           <iframe width="100%" height="315" 
                   src="https://www.youtube.com/embed/4Lq8cLN-60s?si=YR4W5EzfXV2yPF39" 
@@ -472,7 +542,8 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
         </div>
       </div>
       <!-- Thẻ video -->
-      <div class="b-card">
+      <div class="b-card reveal tilt-on" style="position:relative">
+        <span class="tilt-shine"></span>
         <div class="body">
           <iframe width="100%" height="315" 
                   src="https://www.youtube.com/embed/fsphSgRg-pk?si=PT7_PgCVhAlEwgH1" 
@@ -488,7 +559,7 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
 
 
   <!-- ===== Contact ===== -->
-  <section id="contact">
+  <section id="contact" class="reveal">
     <div class="container">
       <h2>Contact</h2>
       <form id="contactForm" action="#" method="post">
@@ -555,7 +626,11 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
       { title: "Bài tập tuần 3 - 9.1", cat: "Tuần 3", img: "https://picsum.photos/400/200?7", desc: "Bài tập 9.1", link: "https://bt9-1-10zt.onrender.com/" },
       { title: "Bài tập tuần 3 - 9.2", cat: "Tuần 3", img: "https://picsum.photos/400/200?8", desc: "Bài tập 9.2", link: "https://bt9-2-pgb.onrender.com/" },
       { title: "Bài tập tuần 4 - 7.1", cat: "Tuần 4", img: "https://picsum.photos/400/200?9", desc: "Bài tập 7.1", link: "https://bt7-1-pgb.onrender.com/" },
-      { title: "Bài tập tuần 4 - 7.2", cat: "Tuần 4", img: "https://picsum.photos/400/200?10", desc: "Bài tập 7.2", link: "https://bt7-2-pgb.onrender.com/" }
+      { title: "Bài tập tuần 4 - 7.2", cat: "Tuần 4", img: "https://picsum.photos/400/200?10", desc: "Bài tập 7.2", link: "https://bt7-2-pgb.onrender.com/" },
+      { title: "Bài tập tuần 5 - 12.1", cat: "Tuần 5", img: "https://picsum.photos/400/200?10", desc: "Bài tập 12.1", link: "https://bt12-1-pgb.onrender.com/" },
+      { title: "Bài tập tuần 5 - 12.2", cat: "Tuần 5", img: "https://picsum.photos/400/200?10", desc: "Bài tập 12.2", link: "https://bt12-2-pgb.onrender.com/" },
+      { title: "Bài tập tuần 6 - 13.1", cat: "Tuần 6", img: "https://picsum.photos/400/200?10", desc: "Bài tập 13.1", link: "https://bt13-1-pgb.onrender.com/" },
+      { title: "Bài tập tuần 6 - 13.2", cat: "Tuần 6", img: "https://picsum.photos/400/200?10", desc: "Bài tập 13.2", link: "https://bt13-2-pgb.onrender.com/" },
     ];
 
     const $ = (q, el=document) => el.querySelector(q);
@@ -568,7 +643,8 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
     function renderProjects(list) {
       if (!grid) return;
       grid.innerHTML = list.map(p => `
-        <article class="p-card" data-cat="${p.cat}">
+        <article class="p-card reveal tilt-on" data-cat="${p.cat}" style="position:relative">
+          <span class="tilt-shine"></span>
           <div class="body">
             <div class="chip" style="margin-bottom:8px;">${p.cat}</div>
             <h3 style="margin:0 0 6px">${p.title}</h3>
@@ -578,6 +654,11 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
         </article>
       `).join("");
       grid.classList.add("grid","p-grid");
+      // Sau khi render xong, observe các card mới để áp dụng reveal
+      observeReveals();
+      // Áp hiệu ứng tilt cho card mới
+      attachTilt($$("#portfolioGrid .tilt-on"));
+      attachRipple($$("#portfolioGrid .btn"));
     }
 
     function renderFilters() {
@@ -616,6 +697,118 @@ Ngoài học tập, mình có nhiều sở thích giúp cân bằng cuộc sốn
     if (e.target === overlay) {
       overlay.classList.remove("open");
     }
+  });
+</script>
+
+<!-- ==== Hiệu ứng động & header shrink (thêm mới) ==== -->
+<script>
+  // Header shrink khi cuộn
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    header.classList.toggle('shrink', window.scrollY > 24);
+  });
+
+  // Reveal khi cuộn vào viewport
+  let revealObserver;
+  function observeReveals() {
+    const reveals = document.querySelectorAll('.reveal:not(.show)');
+    if (!revealObserver) {
+      revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('show');
+        });
+      }, { threshold: 0.15 });
+    }
+    reveals.forEach(el => revealObserver.observe(el));
+  }
+  // Khởi tạo cho các phần tĩnh
+  observeReveals();
+
+  // ===== Animated gradient follows mouse (cập nhật CSS var) =====
+  window.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth) * 100 + '%';
+    const y = (e.clientY / window.innerHeight) * 100 + '%';
+    document.body.style.setProperty('--x', x);
+    document.body.style.setProperty('--y', y);
+  });
+
+  // ===== Typing effect cho hero (không xoá nội dung, chỉ thay thế dòng đầu) =====
+  (function typingEffect(){
+    const hero = document.querySelector('#home');
+    if(!hero) return;
+    const line = hero.querySelectorAll('.muted')[0];
+    if(!line) return;
+    const texts = [
+      "Sinh viên năm 3 – đam mê Network & Security.",
+      "Mục tiêu: Trở thành Kỹ sư Quản trị Mạng.",
+      "Cảm ơn bạn đã ghé thăm website của mình!"
+    ];
+    let i=0, j=0, cur="", direction=1;
+    function tick(){
+      const target = texts[i];
+      cur = target.slice(0, j);
+      line.innerHTML = cur + '<span style="border-right:2px solid var(--brand);margin-left:2px;"></span>';
+      j += direction;
+      if (j > target.length + 10){ direction = -1; }
+      if (j < 0){ direction = 1; i = (i+1)%texts.length; }
+      requestAnimationFrame(()=>setTimeout(tick, 28));
+    }
+    tick();
+  })();
+
+  // ===== Tilt effect (3D nghiêng theo chuột + shine) =====
+  function attachTilt(nodes){
+    (nodes || document.querySelectorAll('.tilt-on')).forEach(card=>{
+      let rect;
+      card.addEventListener('mouseenter', ()=>{ rect = card.getBoundingClientRect(); });
+      card.addEventListener('mousemove', (e)=>{
+        const px = (e.clientX - rect.left) / rect.width - .5;
+        const py = (e.clientY - rect.top) / rect.height - .5;
+        const rx = (py * -8).toFixed(2);
+        const ry = (px * 10).toFixed(2);
+        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
+        const shine = card.querySelector('.tilt-shine');
+        if (shine){
+          const mx = ((px+0.5)*100).toFixed(1)+'%';
+          const my = ((py+0.5)*100).toFixed(1)+'%';
+          shine.style.setProperty('--mx', mx);
+          shine.style.setProperty('--my', my);
+        }
+      });
+      card.addEventListener('mouseleave', ()=>{
+        card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0)';
+      });
+    });
+  }
+  attachTilt(); // áp cho các phần đã có class .tilt-on
+
+  // Áp tilt cho các khối hiện có
+  attachTilt(document.querySelectorAll('.service.tilt-on, .b-card.tilt-on, .card.tilt-on'));
+
+  // ===== Ripple cho nút =====
+  function attachRipple(nodes){
+    (nodes || document.querySelectorAll('.btn')).forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const r = document.createElement('span');
+        r.className = 'ripple';
+        const rect = btn.getBoundingClientRect();
+        const d = Math.max(rect.width, rect.height);
+        r.style.width = r.style.height = d + 'px';
+        r.style.left = (e.clientX - rect.left - d/2) + 'px';
+        r.style.top  = (e.clientY - rect.top  - d/2) + 'px';
+        btn.appendChild(r);
+        setTimeout(()=>r.remove(), 650);
+      });
+    });
+  }
+  attachRipple(); // cho tất cả nút .btn
+
+  // ===== Parallax nhẹ cho avatar khi cuộn =====
+  window.addEventListener('scroll', ()=>{
+    const av = document.querySelector('.avatar');
+    if(!av) return;
+    const y = window.scrollY * 0.05;
+    av.style.transform = `translateY(${Math.min(8,y)}px)`;
   });
 </script>
 
